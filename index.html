@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>StudentVerse — Smart Student Management System</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><rect width=%22100%22 height=%22100%22 rx=%2224%22 fill=%22%238B6CFF%22/><text x=%2250%22 y=%2266%22 font-size=%2255%22 text-anchor=%22middle%22 fill=%22white%22 font-family=%22sans-serif%22>S</text></svg>">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+<!-- Libraries: Chart.js (analytics), jsPDF (PDF export), SheetJS (Excel export), QRCode.js (digital ID / QR attendance) -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.0/chart.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+</head>
+<body data-theme="dark">
+
+<!-- ============ AUTH / LANDING ============ -->
+<section id="auth-screen">
+  <div class="auth-wrap">
+    <div class="auth-hero">
+      <div>
+        <div class="brand">
+          <div class="brand-mark">SV</div>
+          <div class="brand-name">StudentVerse</div>
+        </div>
+        <h1>One campus. Every dashboard, in one place.</h1>
+        <p>Attendance, results, fees, library, placements and AI-assisted planning for students, faculty and admins — live in your browser, no backend required.</p>
+      </div>
+      <div>
+        <div class="hero-stats">
+          <div><b id="stat-students">240</b><span>Students</span></div>
+          <div><b id="stat-faculty">18</b><span>Faculty</span></div>
+          <div><b id="stat-courses">12</b><span>Courses</span></div>
+        </div>
+        <div class="demo-note">Demo build — pick any role below, data is generated locally and saved in your browser (localStorage). No signup, no server.</div>
+      </div>
+    </div>
+    <div class="auth-form">
+      <div class="role-tabs" id="role-tabs">
+        <div class="role-tab active" data-role="student">Student</div>
+        <div class="role-tab" data-role="faculty">Faculty</div>
+        <div class="role-tab" data-role="admin">Admin</div>
+      </div>
+      <h3 id="login-title">Student login</h3>
+      <div class="sub" id="login-sub">Use the demo account or enter any name to explore.</div>
+
+      <div class="field">
+        <label>Full name</label>
+        <input id="login-name" placeholder="e.g. Aarav Sharma" />
+      </div>
+      <div class="field">
+        <label>Login ID</label>
+        <input id="login-id" placeholder="e.g. SV-2026-014" />
+      </div>
+      <div class="field">
+        <label>Password</label>
+        <input id="login-pass" type="password" placeholder="Any password works in this demo" />
+      </div>
+      <button class="btn primary" id="btn-login" style="width:100%; padding:13px;">Sign in →</button>
+      <button class="btn ghost" id="btn-demo" style="width:100%; margin-top:10px;">Use demo account</button>
+      <div class="demo-note">Tip: switch roles above to preview the Student, Faculty and Admin experiences — each has its own dashboard, permissions and tools.</div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ APP SHELL ============ -->
+<div id="app-shell" class="hidden">
+  <aside class="sidebar">
+    <div class="brand">
+      <div class="brand-mark">SV</div>
+      <div class="brand-name">StudentVerse</div>
+    </div>
+    <nav id="nav-container" style="overflow-y:auto; flex:1;"></nav>
+    <div class="sidebar-foot">
+      <div class="user-chip">
+        <div class="avatar" id="user-avatar">S</div>
+        <div>
+          <div class="name" id="user-name">—</div>
+          <div class="role" id="user-role">—</div>
+        </div>
+      </div>
+      <button class="btn ghost sm" id="btn-logout" style="width:100%; margin-top:10px;">Sign out</button>
+    </div>
+  </aside>
+
+  <main class="main">
+    <div class="topbar">
+      <div>
+        <h2 id="view-title">Dashboard</h2>
+        <div class="sub" id="view-sub">Welcome back</div>
+      </div>
+      <div class="top-actions">
+        <div class="search-bar">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></svg>
+          <input id="global-search" placeholder="Smart search…" />
+        </div>
+        <button class="icon-btn" id="btn-theme" title="Toggle dark / light">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/></svg>
+        </button>
+        <button class="icon-btn" id="btn-lang" title="Language">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15 15 0 0 1 0 20 15 15 0 0 1 0-20Z"/></svg>
+        </button>
+      </div>
+    </div>
+
+    <div id="view-root"></div>
+  </main>
+</div>
+
+<div class="toast-wrap" id="toast-wrap"></div>
+
+<script src="app.js"></script>
+</body>
+</html>
