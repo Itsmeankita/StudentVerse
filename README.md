@@ -9,7 +9,7 @@ browser with no backend or database server required.
 
 ## 1. Live Demo
 
-This is a static front-end app, so "live demo" simply means opening it in a browser:
+https://itsmeankita.github.io/StudentVerse/
 
 **Option A — Just open the file**
 Double-click `index.html` (or right-click → Open with → your browser).
